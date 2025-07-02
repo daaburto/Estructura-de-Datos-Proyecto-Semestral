@@ -6,6 +6,7 @@
 #include "boyer-moore.h"
 #include "kmp.h"
 #include "rabin-karp.h"
+#include "suffix-tree.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ int main() {
     BoyerMoore bm;
     KnuthMorrisPratt kmp;
     RabinKarp rk;
+    SuffixTree st;
 
     struct TestCase {
         string text;
@@ -40,18 +42,23 @@ int main() {
         {"ABABDABACDABABCABCABCABCABC", "ABABCAB"},
         {"ABCDEFGHIJKLMNOP", "XYZ"},
         {"AAAAAAAAAA", "AAA"},
-        {"ABCABCABC", "A"}
+        {"ABCABCABC", "A"},
+        {"BANANA","ANA"},
+        {"abcdefghijklmnopqrstuvwxyz","mno"},
+        {"aaaaaaa","b"},
+        {"intintellectintelintention","int"}
     };
 
     for (const auto& [text, pattern] : tests) {
         auto bm_result = bm.search(text, pattern);
         auto kmp_result = kmp.search(text, pattern);
         auto rk_result = rk.search(text, pattern);
-
+        auto st_result = st.search(text, pattern);
         printResults(text, pattern, {
             {"Boyer-Moore", bm_result},
             {"KMP", kmp_result},
-            {"Rabin-Karp", rk_result}
+            {"Rabin-Karp", rk_result},
+            {"Suffix Tree", st_result}
         });
     }
     return 0;
