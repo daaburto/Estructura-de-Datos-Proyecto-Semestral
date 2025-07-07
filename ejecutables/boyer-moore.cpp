@@ -13,7 +13,7 @@ int main(int argc, char **argv){
     }
     
     BoyerMoore bm;
-    string palabra = "ba";
+    string palabra = "AGA";
 
     // Obtener el nombre del archivo desde los argumentos
     string nombreArchivo = argv[1];
@@ -42,13 +42,6 @@ int main(int argc, char **argv){
     string linea;
     while (getline(archivo, linea)) {
         vector<int> posiciones = bm.search(linea, palabra);
-        if (!posiciones.empty()) {
-            cout << "Posiciones: ";
-            for (int p : posiciones) {
-                cout << p << " ";
-            }
-            cout << "En el archivo " << nombreArchivo << endl;
-        }
     }
 
     archivo.close();
