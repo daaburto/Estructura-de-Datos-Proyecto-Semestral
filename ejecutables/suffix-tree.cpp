@@ -18,9 +18,9 @@ int main(int argc, char **argv){
 
     // Obtener el nombre del archivo desde los argumentos
     string nombreArchivo = argv[1];
+    double running_time=0;
+    double building_time=0;
 
-    // Medimos el tiempo por primera vez
-    auto start = chrono::high_resolution_clock::now();
     for (string palabra : palabras){
         // Abrir el archivo en modo lectura
         ifstream archivo(nombreArchivo);
@@ -28,27 +28,38 @@ int main(int argc, char **argv){
         if (!archivo.is_open()){
             cerr << "No se pudo abrir el archivo " << nombreArchivo << endl;
             return 1;
-        }
-
-        // Ejecutar el algoritmo
+        }        // Ejecutar el algoritmo
         string linea;
         while (getline(archivo, linea)) {
-            vector<int> posiciones = st.search(linea, palabra);
+
+            // Medimos el tiempo por primera vez
+            auto start = chrono::high_resolution_clock::now();
+            st.build_tree(palabra);
+            // Medimos el tiempo por segunda vez    
+            auto end = chrono::high_resolution_clock::now();
+
+            building_time += chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+
+            // Medimos el tiempo por primera vez
+            auto start = chrono::high_resolution_clock::now();
+            st.st_find(palabra);
+            // Medimos el tiempo por segunda vez    
+            auto end = chrono::high_resolution_clock::now();
+
+            // Calculamos el tiempo transcurrido
+            building_time += chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+
         }
+            
 
         archivo.close();
         
     }
-    // Medimos el tiempo por segunda vez
-        auto end = chrono::high_resolution_clock::now();
-
-    // Calculamos el tiempo transcurrido
-    double running_time = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-        
     running_time *= 1e-9;
 
+
     //Imprimimos el resultado
-    cout << argv[0] << "," << running_time << endl;
+    cout << argv[0] << "," << running_time << running_ endl;
 
     return 0;
 }

@@ -19,6 +19,16 @@ public:
         return searchPattern(pattern);
     }
 
+    std::vector<int> st_search(const std::string& pattern){
+    	return searchPattern(pattern)
+    }
+    void build_tree(std::string& text){
+    	data = text;
+    	if (data.back()!='$') data.push_back('$');
+    	root = std::make_shared<Node>();
+    	buildNaive();
+    }
+
 
 private:
     struct Node {
