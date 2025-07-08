@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <list>
 #include "../algoritmos/boyer-moore.h"
 
 using namespace std;
@@ -13,49 +14,41 @@ int main(int argc, char **argv){
     }
     
     BoyerMoore bm;
-    string palabra = "AGA";
+    std::list<string> palabras = {"TATA", "AAAGATGAGGTAACTGGGGCACAAA", "ACGTE", "AAAGATGAGGTAACTGGGGCACAAAEASD", "ATTATGT", "GTGATGTGATCTCTGCTCACTGCAAGCTCCGCCCCTCGGGTTCATGCCATTCTCCTTCCTCAGCCTCCCGAGTACCTGGGACTACGGGCGCCCACCACCACACCTGGCTAATTTTTTTGTA", "TTTGGGAAA", "GTGATGTGATCTCTGCTCACTGCAAGCTCCGCCCCTCGGGTTCATGCCATTCTCCTTCCTCAGCCTCCCGAGTACCTGGGACTACGGGCGCCCACCACECACACCTGGCTAATTTTTTTGTA"};
 
     // Obtener el nombre del archivo desde los argumentos
     string nombreArchivo = argv[1];
 
-    // Abrir el archivo en modo lectura
-    ifstream archivo(nombreArchivo);
-
-    if (!archivo.is_open()){
-        cerr << "No se pudo abrir el archivo " << nombreArchivo << endl;
-        return 1;
-    }
-
-    // Obtener tamaño del archivo
-    ifstream archivoParaTamano(nombreArchivo, ios::binary | ios::ate);
-    if (!archivoParaTamano.is_open()) {
-        cerr << "No se pudo abrir el archivo para medir tamaño: " << nombreArchivo << endl;
-        return 1;
-    }
-    streamsize tamanoArchivo = archivoParaTamano.tellg();
-    archivoParaTamano.close();
-    
     // Medimos el tiempo por primera vez
     auto start = chrono::high_resolution_clock::now();
+    for (string palabra : palabras){
+        // Abrir el archivo en modo lectura
+        ifstream archivo(nombreArchivo);
 
-    // Ejecutar el algoritmo
-    string linea;
-    while (getline(archivo, linea)) {
-        vector<int> posiciones = bm.search(linea, palabra);
+        if (!archivo.is_open()){
+            cerr << "No se pudo abrir el archivo " << nombreArchivo << endl;
+            return 1;
+        }
+
+        // Ejecutar el algoritmo
+        string linea;
+        while (getline(archivo, linea)) {
+            vector<int> posiciones = bm.search(linea, palabra);
+        }
+
+        archivo.close();
+        
     }
-
-    archivo.close();
-
     // Medimos el tiempo por segunda vez
-    auto end = chrono::high_resolution_clock::now();
+        auto end = chrono::high_resolution_clock::now();
 
     // Calculamos el tiempo transcurrido
     double running_time = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-    
+        
     running_time *= 1e-9;
 
     //Imprimimos el resultado
-    cout << argv[0] << ";" << tamanoArchivo << ";" << running_time << endl;
+    cout << argv[0] << "," << running_time << endl;
 
     return 0;
 }
